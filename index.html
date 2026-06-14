@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="de"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GartenFix – Faire Gartenpflege im Abo</title>
+<title>Grünheld – Faire Gartenpflege im Abo</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&amp;family=DM+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
 <style>
   :root {
@@ -151,7 +151,7 @@
   .services-header { text-align: center; margin-bottom: 4rem; }
   .services-header .section-sub { margin: 1rem auto 0; }
   .services-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
   }
   .service-card {
@@ -188,7 +188,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
-    align-items: start;
+    align-items: stretch;
   }
 
   .plan-card {
@@ -196,6 +196,7 @@
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 16px; padding: 2.5rem 2rem;
     position: relative; transition: all 0.3s;
+    display: flex; flex-direction: column;
   }
   .plan-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.08); }
   .plan-card.featured {
@@ -223,7 +224,7 @@
   .plan-tagline { font-size: 0.85rem; color: rgba(255,255,255,0.55); margin-bottom: 1.8rem; }
   .plan-card.featured .plan-tagline { color: rgba(26,58,31,0.65); }
 
-  .plan-price-block { margin-bottom: 2rem; }
+  .plan-price-block { margin-bottom: 2rem; min-height: 105px; }
   .plan-price {
     font-family: 'Playfair Display', serif;
     font-size: 3rem; font-weight: 900;
@@ -255,7 +256,7 @@
     background: rgba(26,58,31,0.12); color: var(--green-deep);
   }
 
-  .plan-features { list-style: none; margin-bottom: 2rem; }
+  .plan-features { list-style: none; margin-bottom: 2rem; flex-grow: 1; }
   .plan-features li {
     display: flex; align-items: flex-start; gap: 0.6rem;
     font-size: 0.88rem; color: rgba(255,255,255,0.75);
@@ -450,6 +451,15 @@
     font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.25s;
   }
   .form-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .form-submit:disabled { opacity: 0.55; cursor: default; transform: none; }
+  .form-consent {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    margin-bottom: 1.2rem; font-size: 0.8rem; line-height: 1.5;
+    color: rgba(255,255,255,0.6); cursor: pointer;
+  }
+  .form-consent input { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; accent-color: var(--gold); cursor: pointer; }
+  .form-consent a { color: var(--gold-light); }
+  .form-status { margin-top: 1rem; font-size: 0.9rem; line-height: 1.5; color: var(--green-light); font-weight: 600; }
 
   /* ── FOOTER ── */
   footer {
@@ -540,9 +550,7 @@
   .scroll-cue svg { width: 30px; height: 30px; }
   @keyframes cueBounce { 0%,100%{ transform: translateX(-50%) translateY(0);} 50%{ transform: translateX(-50%) translateY(9px);} }
 
-  /* === Service-Card Hover-Caption === */
-  .service-img::before { content: 'Mehr erfahren →'; position: absolute; left: 1.4rem; bottom: 1rem; z-index: 2; color: #fff; font-size: .82rem; font-weight: 600; letter-spacing: .3px; opacity: 0; transform: translateY(8px); transition: opacity .35s ease, transform .35s ease; text-shadow: 0 2px 8px rgba(0,0,0,.5); }
-  .service-card:hover .service-img::before { opacity: 1; transform: translateY(0); }
+  /* === Service-Card Hover === */
   .service-card { transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; }
   .service-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(26,58,31,.16); border-color: rgba(212,168,67,.5); }
 
@@ -599,6 +607,7 @@
     .hero-video { display: none; }
     .hero { min-height: auto; padding: 7rem 1.5rem 3.5rem; }
     .contact { background-attachment: scroll; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   /* === Feintuning kleine Handys (≤480px) === */
@@ -606,6 +615,7 @@
     nav { padding: 0.85rem 1.2rem; }
     .nav-logo { font-size: 1.45rem; }
     section { padding: 3.5rem 1.2rem; }
+    .services-grid { grid-template-columns: 1fr; }
     .hero { padding: 6.5rem 1.2rem 3rem; }
     .hero h1 { font-size: 2.3rem; }
     .hero p { font-size: 1rem; margin-bottom: 2rem; }
@@ -620,13 +630,48 @@
     .why-visual { padding: 2rem 1.5rem; min-height: 300px; }
   }
 
+  /* === Scroll-Fortschrittsbalken === */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    box-shadow: 0 0 10px rgba(212,168,67,.55);
+    z-index: 200; will-change: width;
+  }
+
+  /* === Reveal-Varianten (Richtung) === */
+  html.reveal-ready .reveal-left,
+  html.reveal-ready .reveal-right,
+  html.reveal-ready .reveal-scale {
+    opacity: 0; will-change: opacity, transform;
+    transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  html.reveal-ready .reveal-left  { transform: translateX(-46px); }
+  html.reveal-ready .reveal-right { transform: translateX(46px); }
+  html.reveal-ready .reveal-scale { transform: scale(.92) translateY(26px); }
+  html.reveal-ready .reveal-left.in,
+  html.reveal-ready .reveal-right.in,
+  html.reveal-ready .reveal-scale.in { opacity: 1; transform: none; }
+
+  /* Parallax-Performance */
+  .hero-content, .hero-video, .why-visual { will-change: transform; }
+
+  /* === Bewegung reduzieren (Accessibility) === */
+  @media (prefers-reduced-motion: reduce) {
+    html.reveal-ready .reveal,
+    html.reveal-ready .reveal-left,
+    html.reveal-ready .reveal-right,
+    html.reveal-ready .reveal-scale { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .scroll-cue { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">Garten<span>Fix</span></div>
+  <div class="nav-logo">Grün<span>held</span></div>
   <ul class="nav-links">
     <li><a href="#leistungen">Leistungen</a></li>
     <li><a href="#pakete">Pakete</a></li>
@@ -766,12 +811,11 @@
 
       <!-- PAKET 1 -->
       <div class="plan-card">
-        <div class="plan-badge" style="background:var(--green-bright);color:white;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg> Nr. 1 Preis-Leistung DE</div>
         <div class="plan-name">Einzelbesuch</div>
         <div class="plan-tagline">Einmalig · kein Abo · kein Risiko</div>
         <div class="plan-price-block">
-          <div style="font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:900;color:var(--gold-light);line-height:1.3;margin-bottom:0.4rem;">Bestes Preis-Leistungs-Verhältnis deutschlandweit</div>
-          <div style="font-size:0.82rem;color:rgba(255,255,255,0.42);">Preis nach persönlicher Anfrage – fair &amp; transparent</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--gold-light);line-height:1.1;">Preis auf Anfrage</div>
+          <div style="font-size:0.82rem;color:rgba(255,255,255,0.42);margin-top:0.4rem;">Individuell kalkuliert – fair &amp; transparent</div>
         </div>
         <div class="plan-visits"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> 1 Besuch nach Vereinbarung</div>
         <ul class="plan-features">
@@ -782,7 +826,7 @@
           <li><span class="check">✓</span> Entsorgung aller Gartenabfälle</li>
           <li><span class="check">✓</span> An- &amp; Abfahrt inklusive</li>
         </ul>
-        <div style="background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.3);border-radius:8px;padding:0.7rem 1rem;font-size:0.85rem;color:var(--gold-light);margin-bottom:1.2rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M12 8C12 8 11 2 8 2a2.5 2.5 0 0 0 0 5h4Zm0 0s1-6 4-6a2.5 2.5 0 0 1 0 5h-4Z"/></svg> <strong>Treue-Bonus:</strong> Langjährige Kunden erhalten exklusive Vorteile &amp; Rabatte</div>
+        <div style="display:flex;align-items:flex-start;gap:0.6rem;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.3);border-radius:8px;padding:0.7rem 1rem;font-size:0.85rem;color:var(--gold-light);margin-bottom:1.2rem;"><svg viewBox="0 0 24 24" width="18" height="18" style="flex-shrink:0;margin-top:1px;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M12 8C12 8 11 2 8 2a2.5 2.5 0 0 0 0 5h4Zm0 0s1-6 4-6a2.5 2.5 0 0 1 0 5h-4Z"/></svg> <span><strong>Treue-Bonus:</strong> Langjährige Kunden erhalten exklusive Vorteile &amp; Rabatte</span></div>
         <a href="#kontakt" class="plan-btn plan-btn-outline">Jetzt kostenlos anfragen</a>
       </div>
 
@@ -958,7 +1002,7 @@
         </div>
       </div>
       <div>
-        <div class="section-label">Warum GartenFix</div>
+        <div class="section-label">Warum Grünheld</div>
         <h2 class="section-title">Ihr Garten. <em>Unsere</em> Leidenschaft.</h2>
         <ul class="why-list">
           <li>
@@ -1031,7 +1075,7 @@
     <div class="reviews-header">
       <div class="section-label">Kundenstimmen</div>
       <h2 class="section-title">Was unsere <em>Kunden</em> sagen</h2>
-      <p class="section-sub">Über 500 zufriedene Kunden vertrauen GartenFix – lesen Sie selbst.</p>
+      <p class="section-sub">Über 500 zufriedene Kunden vertrauen Grünheld – lesen Sie selbst.</p>
       <div class="stars-row">
         <div class="stars">★★★★★</div>
         <div class="stars-label">4,9 / 5 – Durchschnittsbewertung</div>
@@ -1076,7 +1120,7 @@
       </div>
       <div class="review-card">
         <div class="review-stars">★★★★★</div>
-        <p class="review-text">„Endlich Zeit für die Familie! GartenFix kümmert sich um alles. Die Hecke sieht aus wie aus dem Katalog. Klare Empfehlung!"</p>
+        <p class="review-text">„Endlich Zeit für die Familie! Grünheld kümmert sich um alles. Die Hecke sieht aus wie aus dem Katalog. Klare Empfehlung!"</p>
         <div class="review-author">
           <div class="review-avatar">AL</div>
           <div>
@@ -1100,7 +1144,7 @@
       </div>
       <div class="review-card">
         <div class="review-stars">★★★★☆</div>
-        <p class="review-text">„Sehr professionell und zuverlässig. Das Preis-Leistungs-Verhältnis ist unschlagbar. Ich empfehle GartenFix jedem weiter!"</p>
+        <p class="review-text">„Sehr professionell und zuverlässig. Das Preis-Leistungs-Verhältnis ist unschlagbar. Ich empfehle Grünheld jedem weiter!"</p>
         <div class="review-author">
           <div class="review-avatar">BM</div>
           <div>
@@ -1141,44 +1185,49 @@
             <div class="contact-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></div>
             <div>
               <div class="contact-item-label">E-Mail</div>
-              <div class="contact-item-text">kontakt@gartenfix.de</div>
+              <div class="contact-item-text">kontakt@gruenheld.de</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="contact-form">
+      <form class="contact-form" id="leadForm" novalidate>
         <div class="form-title">Jetzt kostenlos anfragen</div>
         <div class="form-group">
-          <label>Ihr Name</label>
-          <input type="text" placeholder="Max Mustermann">
+          <label for="lf-name">Ihr Name</label>
+          <input id="lf-name" name="name" type="text" autocomplete="name" required placeholder="Max Mustermann">
         </div>
         <div class="form-group">
-          <label>Telefon / E-Mail</label>
-          <input type="text" placeholder="0151 123 456 oder max@mail.de">
+          <label for="lf-contact">Telefon / E-Mail</label>
+          <input id="lf-contact" name="contact" type="text" autocomplete="email" required placeholder="0151 123 456 oder max@mail.de">
         </div>
         <div class="form-group">
-          <label>Gewünschtes Paket</label>
-          <select>
+          <label for="lf-paket">Gewünschtes Paket</label>
+          <select id="lf-paket" name="paket">
             <option value="">Bitte wählen...</option>
-            <option>Starter – 1 Besuch</option>
-            <option>Standard-Abo – 12 Monate</option>
-            <option>Premium-Abo – 24 Monate</option>
+            <option>Einzelbesuch</option>
+            <option>Komfort-Paket</option>
+            <option>Premium-Paket</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Ihre Nachricht (optional)</label>
-          <textarea placeholder="Beschreiben Sie kurz Ihren Garten..."></textarea>
+          <label for="lf-nachricht">Ihre Nachricht (optional)</label>
+          <textarea id="lf-nachricht" name="nachricht" placeholder="Beschreiben Sie kurz Ihren Garten..."></textarea>
         </div>
-        <button class="form-submit">Kostenlos anfragen →</button>
-      </div>
+        <label class="form-consent">
+          <input type="checkbox" name="consent" required>
+          <span>Ich habe die <a href="#datenschutz">Datenschutzerklärung</a> gelesen und bin mit der Verarbeitung meiner Daten zur Kontaktaufnahme einverstanden.</span>
+        </label>
+        <button type="submit" class="form-submit">Kostenlos anfragen →</button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Garten<span>Fix</span></div>
-  <p>© 2025 GartenFix · Latin Asenov · Nürnberg</p>
+  <div class="footer-logo">Grün<span>held</span></div>
+  <p>© 2025 Grünheld · Latin Asenov · Nürnberg</p>
   <p style="font-size:0.78rem;color:rgba(255,255,255,0.25)">Faire Gartenpflege im Abo</p>
 </footer>
 
@@ -1188,10 +1237,13 @@
 <script>
 (function(){
   var html=document.documentElement; html.classList.add('reveal-ready');
-  // Scroll-Reveal
-  var sel='.service-card,.plan-card,.why-list li,.section-title,.section-label,.section-sub,.business-banner,.incl-card,.review,.contact-inner > div,.why-visual';
-  var els=[].slice.call(document.querySelectorAll(sel));
-  els.forEach(function(el,i){ el.classList.add('reveal'); el.style.transitionDelay=((i%5)*70)+'ms'; });
+  // Scroll-Reveal mit Richtungs-Varianten (gestaffelt)
+  function tagReveal(sel, cls){ [].slice.call(document.querySelectorAll(sel)).forEach(function(el,i){ if(!/\breveal/.test(el.className)){ el.classList.add(cls); el.style.transitionDelay=((i%5)*80)+'ms'; } }); }
+  tagReveal('.section-title,.section-label,.section-sub', 'reveal');
+  tagReveal('.service-card,.plan-card,.review,.incl-card,.business-banner', 'reveal-scale');
+  tagReveal('.contact-form', 'reveal-right');
+  tagReveal('.why-list li,.contact-info', 'reveal-left');
+  var els=[].slice.call(document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale'));
   if('IntersectionObserver' in window){
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}});},{threshold:.12, rootMargin:'0px 0px -7% 0px'});
     els.forEach(function(el){io.observe(el);});
@@ -1210,9 +1262,32 @@
     nums.forEach(function(el){io2.observe(el);});
   }
 
-  // Nav verdichten
+  // Scroll-gesteuert: Nav verdichten + Fortschrittsbalken + Parallax (ein rAF-Handler)
   var nav=document.querySelector('nav');
-  if(nav){ window.addEventListener('scroll', function(){ nav.classList.toggle('scrolled', window.scrollY>40); }, {passive:true}); }
+  var progress=document.createElement('div'); progress.className='scroll-progress'; document.body.appendChild(progress);
+  var heroContent=document.querySelector('.hero-content');
+  var heroVid=document.querySelector('.hero-video');
+  var whyVis=document.querySelector('.why-visual');
+  var reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var vh=window.innerHeight, ticking=false;
+  window.addEventListener('resize', function(){ vh=window.innerHeight; }, {passive:true});
+  function onScroll(){
+    if(ticking) return; ticking=true;
+    requestAnimationFrame(function(){
+      var st=window.scrollY||window.pageYOffset;
+      if(nav) nav.classList.toggle('scrolled', st>40);
+      var docH=document.documentElement.scrollHeight - vh;
+      if(progress) progress.style.width=(docH>0 ? Math.min(100, st/docH*100) : 0)+'%';
+      if(!reduce){
+        if(heroContent && st < vh){ heroContent.style.transform='translateY('+(st*0.3)+'px)'; heroContent.style.opacity=String(Math.max(0, 1 - st/(vh*0.8))); }
+        if(heroVid && st < vh){ heroVid.style.transform='scale('+(1 + (st/vh)*0.12)+')'; }
+        if(whyVis){ var r=whyVis.getBoundingClientRect(); if(r.top<vh && r.bottom>0){ whyVis.style.transform='translateY('+(-(vh-r.top)*0.05)+'px)'; } }
+      }
+      ticking=false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
 
   // Scroll-Cue ins Hero
   var hero=document.querySelector('.hero');
@@ -1233,6 +1308,23 @@
     backdrop.addEventListener('click', function(){ setMenu(false); });
     menu.querySelectorAll('a').forEach(function(link){ link.addEventListener('click', function(){ setMenu(false); }); });
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') setMenu(false); });
+  }
+
+  // Lead-Formular
+  var form=document.getElementById('leadForm');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var status=document.getElementById('formStatus');
+      if(!form.checkValidity()){ form.reportValidity(); return; }
+      var data=Object.fromEntries(new FormData(form).entries());
+      // TODO: Mail-Anbindung. Hier folgt der POST an den Versand-Endpoint
+      // (z.B. Web3Forms, oder eigene Serverless-Function mit Resend/SMTP).
+      // Aktuell wird die Anfrage nur lokal bestaetigt, NICHT verschickt.
+      console.log('Lead erfasst (noch kein Versand):', data);
+      form.querySelectorAll('input,select,textarea,button').forEach(function(el){ el.disabled=true; });
+      if(status) status.textContent='Danke! Ihre Anfrage ist eingegangen – wir melden uns innerhalb von 24 Stunden.';
+    });
   }
 })();
 </script>
